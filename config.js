@@ -3,17 +3,20 @@ const cloudinary = require('cloudinary').v2;
 
 // Database configuration
 const dbConfig = {
-  host: process.env.DB_HOST || 'switchback.proxy.rlwy.net',
+  host: process.env.DB_HOST || 'autorack.proxy.rlwy.net',
   user: process.env.DB_USER || 'root',
-  password: 'wvtbWVozAzPoLzIWnQeuMGFpEmHMdkbv',
+  password: 'OTsbTnSEWaKvMPWThjYvcyWhPJFptjar',
   database: process.env.DB_NAME || 'railway',
-  port: process.env.DB_PORT || 56348,
+  port: process.env.DB_PORT || 35779,
   waitForConnections: true,
   connectionLimit: 10,
   queueLimit: 0,
   acquireTimeout: 60000,
   timeout: 60000
 };
+
+
+
 
 // Create connection pool
 const pool = mysql.createPool(dbConfig);
