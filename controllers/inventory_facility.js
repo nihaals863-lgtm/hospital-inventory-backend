@@ -22,15 +22,9 @@ const getInventoryByFacilityId = async (req, res) => {
       [facility_id]
     );
 
-    // Add batch_number as 'N/A' since it might be missing from the table
-    const rowsWithBatch = rows.map(row => ({
-      ...row,
-      batch_number: row.batch_number || 'N/A'
-    }));
-
     res.status(200).json({
       success: true,
-      data: rowsWithBatch
+      data: rows
     });
 
   } catch (error) {
@@ -71,16 +65,10 @@ const getAllInventory = async (req, res) => {
       ORDER BY inv.created_at DESC`
     );
 
-    // Add batch_number as 'N/A' since it might be missing from the table
-    const rowsWithBatch = rows.map(row => ({
-      ...row,
-      batch_number: row.batch_number || 'N/A'
-    }));
-
     res.status(200).json({
       success: true,
-      total: rowsWithBatch.length,
-      data: rowsWithBatch
+      total: rows.length,
+      data: rows
     });
 
   } catch (error) {
@@ -98,7 +86,6 @@ const getAllInventory = async (req, res) => {
 
 
 
-module.exports = {
-  getInventoryByFacilityId,
+module.exports = { getInventoryByFacilityId,
   getAllInventory
-};
+ };

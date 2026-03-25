@@ -111,7 +111,6 @@ app.use("/api/facility-requisitions", facilityRequisitionRoutes);
 app.use("/api/inventory-facility", inventoryFacilityRoutes);
 app.use("/api/receipts", receiptsRoutes);
 app.use("/api/suppliers", require('./routes/supplierRoutes'));
-app.use("/api/batches", require('./routes/batchRoutes'));
 app.use("/api/notifications", require('./routes/notificationRoutes'));
 app.use("/api/incoming-goods", require('./routes/incomingGoodsRoutes'));
 
@@ -130,22 +129,16 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   try {
-    // Test database connection (non-blocking)
-    const dbConnected = await testConnection();
-    if (!dbConnected) {
-      console.warn('⚠️  Starting server without database connection. Some features may not work.');
-    }
+    // Test database connection
+    await testConnection();
     
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);
-      if (!dbConnected) {
-        console.log('⚠️  Note: Database connection failed. Please check your database configuration.');
-      }
+
     });
   } catch (error) {
     console.error('Failed to start server:', error);
-    // Don't exit - let user fix the issue
-    console.error('Please check your configuration and try again.');
+    process.exit(1);
   }
 };
 

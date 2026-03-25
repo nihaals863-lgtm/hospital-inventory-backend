@@ -5,7 +5,6 @@ const Joi = require('joi');
 
 const {
   getInventory,
-  getWarehouseInventoryById, // Added this
   createWarehouseInventory,
   createWarehouseInventoryBulk,
   updateInventoryItem,
@@ -38,7 +37,7 @@ router.get('/:id/movements', getStockMovements);
 router.get('/', getInventory);
 
 // ✅ Get single inventory item by ID
-router.get('/:id', getWarehouseInventoryById);
+router.get('/:id', getInventory);
 
 // ✅ Create single or multiple warehouse inventory items
 
