@@ -151,7 +151,6 @@ const getInventoryByFacilityId = async (req, res) => {
         ifac.facility_id,
         ifac.item_id,
         ifac.quantity,
-        COALESCE(ifac.batch_number, 'N/A') as batch_number,
         ifac.item_cost,
         ifac.expiry_date,
         -- Use COALESCE to prioritize inventory_facility fields, fallback to inventory table
@@ -190,17 +189,15 @@ const getInventoryByFacilityId = async (req, res) => {
       ORDER BY ifac.updated_at DESC, ifac.created_at DESC
     `, [id]);
 
-    if (items.length === 0) {
-      return res.status(404).json({
-        success: false,
-        message: "Is facility ke liye koi inventory item nahi mila"
-      });
-    }
+    const itemsWithBatch = items.map(item => ({
+      ...item,
+      batch_number: item.batch_number || 'N/A'
+    }));
 
     res.json({
       success: true,
       message: "Inventory with requisition items retrieved successfully",
-      data: items
+      data: itemsWithBatch
     });
 
   } catch (error) {

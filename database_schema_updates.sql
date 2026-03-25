@@ -159,3 +159,25 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   KEY `is_read` (`is_read`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+
+-- =====================================================
+-- 9. REQUISITION & INVENTORY SCHEMA PATCHES (MARCH 2026)
+-- =====================================================
+
+-- Add estimated_usage_duration to facility_requisitions
+ALTER TABLE `facility_requisitions` 
+ADD COLUMN `estimated_usage_duration` INT DEFAULT NULL AFTER `remarks`;
+
+-- Add estimated_usage_duration to requisitions (user/staff)
+ALTER TABLE `requisitions` 
+ADD COLUMN `estimated_usage_duration` INT DEFAULT NULL AFTER `remarks`;
+
+-- Add batch_number to inventory related tables (If not exists - check and run if needed)
+-- ALTER TABLE `inventory_facility` ADD COLUMN `batch_number` VARCHAR(100) DEFAULT NULL AFTER `expiry_date`;
+-- ALTER TABLE `inventory_warehouse` ADD COLUMN `batch_number` VARCHAR(100) DEFAULT NULL AFTER `expiry_date`;
+-- ALTER TABLE `inventory_user` ADD COLUMN `batch_number` VARCHAR(100) DEFAULT NULL AFTER `expiry_date`;
+
+-- =====================================================
+-- SUCCESS: Update script complete
+-- =====================================================
+

@@ -16,15 +16,21 @@ const getInventoryByFacilityId = async (req, res) => {
     }
 
     const [rows] = await connection.execute(
-      `SELECT id, item_code, item_name, category, description, unit, facility_id, item_id, quantity, reorder_level, item_cost, expiry_date, COALESCE(batch_number, 'N/A') as batch_number, created_at, updated_at
+      `SELECT id, item_code, item_name, category, description, unit, facility_id, item_id, quantity, reorder_level, item_cost, expiry_date, created_at, updated_at
        FROM inventory_facility
        WHERE facility_id = ?`,
       [facility_id]
     );
 
+    // Add batch_number as 'N/A' since it might be missing from the table
+    const rowsWithBatch = rows.map(row => ({
+      ...row,
+      batch_number: row.batch_number || 'N/A'
+    }));
+
     res.status(200).json({
       success: true,
-      data: rows
+      data: rowsWithBatch
     });
 
   } catch (error) {
@@ -58,7 +64,6 @@ const getAllInventory = async (req, res) => {
         inv.reorder_level,
         inv.item_cost,
         inv.expiry_date,
-        COALESCE(inv.batch_number, 'N/A') as batch_number,
         inv.created_at,
         inv.updated_at
       FROM inventory_facility inv
@@ -66,10 +71,16 @@ const getAllInventory = async (req, res) => {
       ORDER BY inv.created_at DESC`
     );
 
+    // Add batch_number as 'N/A' since it might be missing from the table
+    const rowsWithBatch = rows.map(row => ({
+      ...row,
+      batch_number: row.batch_number || 'N/A'
+    }));
+
     res.status(200).json({
       success: true,
-      total: rows.length,
-      data: rows
+      total: rowsWithBatch.length,
+      data: rowsWithBatch
     });
 
   } catch (error) {
