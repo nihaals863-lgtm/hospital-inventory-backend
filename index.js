@@ -47,7 +47,8 @@ const allowedOrigins = [
   'https://resonant-kangaroo-a7cd11.netlify.app',
   'https://hospital-inventory2.netlify.app',
   'https://hospital-inventory-management-new.netlify.app',
-  'https://inventory.francisfosugroup.com'
+  'https://inventory.francisfosugroup.com',
+  'https://hospital-inventory.kiaantechnology.com'
 ];
 
 app.use(cors({
@@ -111,6 +112,7 @@ app.use("/api/facility-requisitions", facilityRequisitionRoutes);
 app.use("/api/inventory-facility", inventoryFacilityRoutes);
 app.use("/api/receipts", receiptsRoutes);
 app.use("/api/suppliers", require('./routes/supplierRoutes'));
+app.use("/api/batches", require('./routes/batchRoutes'));
 app.use("/api/notifications", require('./routes/notificationRoutes'));
 app.use("/api/incoming-goods", require('./routes/incomingGoodsRoutes'));
 
@@ -129,16 +131,22 @@ app.use(errorHandler);
 // Start server
 const startServer = async () => {
   try {
-    // Test database connection
-    await testConnection();
+    // Test database connection (non-blocking)
+    const dbConnected = await testConnection();
+    if (!dbConnected) {
+      console.warn('⚠️  Starting server without database connection. Some features may not work.');
+    }
     
     app.listen(PORT, () => {
       console.log(`🚀 Server is running on port ${PORT}`);
-
+      if (!dbConnected) {
+        console.log('⚠️  Note: Database connection failed. Please check your database configuration.');
+      }
     });
   } catch (error) {
     console.error('Failed to start server:', error);
-    process.exit(1);
+    // Don't exit - let user fix the issue
+    console.error('Please check your configuration and try again.');
   }
 };
 

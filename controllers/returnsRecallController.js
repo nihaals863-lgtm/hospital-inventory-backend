@@ -19,8 +19,9 @@ const getAllReturns = async (req, res) => {
           rr.created_at,
           rr.updated_at
        FROM returns_recall rr
-       LEFT JOIN inventory_facility f 
-              ON f.item_id = rr.item_id AND f.facility_id = rr.facility_id
+       LEFT JOIN inventory_warehouse f 
+              ON f.id = rr.item_id
+       LEFT JOIN facilities fac ON rr.facility_id = fac.id
        ORDER BY rr.created_at DESC`
     );
 
@@ -118,7 +119,7 @@ const getReturnsByFacility = async (req, res) => {
           rr.created_at,
           rr.updated_at
         FROM returns_recall rr
-        LEFT JOIN inventory_facility i ON rr.item_id = i.item_id
+        LEFT JOIN inventory_warehouse i ON rr.item_id = i.id
         LEFT JOIN facilities f ON rr.facility_id = f.id
         WHERE rr.facility_id = ?
         ORDER BY rr.created_at DESC`,
